@@ -477,7 +477,6 @@ namespace AccesoDatos
 
         #endregion
 
-
         #region  Metodos Usuarios
 
 
@@ -645,10 +644,6 @@ namespace AccesoDatos
 
 
         #endregion
-
-
-
-
     }
 
 }
