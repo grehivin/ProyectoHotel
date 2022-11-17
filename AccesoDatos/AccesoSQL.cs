@@ -581,7 +581,7 @@ namespace AccesoDatos
                     var consulta = (from x in contexto.Usuarios
                                     where x.Usuario.Equals(P_Entidad.Usuario)
                                     select x).ToList();
-
+                     
                     if (consulta != null)
                     {
                         consulta.ForEach(x =>

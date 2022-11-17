@@ -6,8 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient(typeof(ILogica), typeof(Logica));
-builder.Services.AddTransient(typeof(IAccesoSQL), typeof(AccesoSQL));
+builder.Services.AddTransient<ILogica, Logica>();
+builder.Services.AddTransient<IAccesoSQL,AccesoSQL>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

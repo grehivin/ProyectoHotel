@@ -10,7 +10,7 @@ namespace Negocio.Logica
     {
       
         private readonly IAccesoSQL _iaccesoSQL;
-        public Logica(AccesoSQL iaccesoSQL)
+        public Logica(IAccesoSQL iaccesoSQL)
         {
             _iaccesoSQL = iaccesoSQL;
         }
