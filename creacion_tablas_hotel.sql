@@ -106,7 +106,7 @@ insert into hotel.tipos_habitaciones (
 	123.45
 )
 
-insert into hotel.habitacones (
+insert into hotel.habitaciones (
 	num_habitacion,
 	piso_habitacion,
 	tipo_habitacion,
@@ -125,7 +125,7 @@ go
 create view hotel.habitaciones_disponibles as 
 	select
 		h.*
-	from hotel.reservaciones r right outer join hotel.habitacones h
+	from hotel.reservaciones r right outer join hotel.habitaciones h
 		on r.num_habitacion = h.num_habitacion
 	where
 		r.id_reservacion is null;
