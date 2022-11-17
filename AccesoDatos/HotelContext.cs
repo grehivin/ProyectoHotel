@@ -2,11 +2,14 @@
 using Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace AccesoDatos
 {
     public partial class HotelContext : DbContext
     {
+        private static string connectionString = "Server=tcp:progravan.database.windows.net,1433;Initial Catalog=progravan;Persist Security Info=False;User ID=progravan;Password=Progr4van;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
         public HotelContext()
         {
         }
@@ -30,7 +33,7 @@ namespace AccesoDatos
             if (!optionsBuilder.IsConfigured)
             {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=tcp:progravan.database.windows.net,1433;Initial Catalog=progravan;Persist Security Info=False;User ID=progravan;Password=Progr4van;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
