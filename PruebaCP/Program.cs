@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PruebaCP
+namespace WebAPI
 {
     public class Program
     {

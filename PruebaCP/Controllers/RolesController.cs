@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
 
-namespace PruebaCP.Controllers
+namespace WebAPI.Controllers
 {
     public class RolesController : Controller
     {
         private readonly HotelContext _context;
 
-        public RolesController()//(HotelContext context)
+        public RolesController() // (HotelContext context)
         {
-            _context = new HotelContext(); //context;
+            _context = new HotelContext(); // context;
         }
 
         // GET: Roles

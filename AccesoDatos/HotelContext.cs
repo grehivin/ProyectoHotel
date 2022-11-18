@@ -2,14 +2,15 @@
 using Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
+
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
 
 namespace AccesoDatos
 {
     public partial class HotelContext : DbContext
     {
-        private static string connectionString = "Server=tcp:progravan.database.windows.net,1433;Initial Catalog=progravan;Persist Security Info=False;User ID=progravan;Password=Progr4van;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
         public HotelContext()
         {
         }
@@ -19,7 +20,6 @@ namespace AccesoDatos
         {
         }
 
-        public virtual DbSet<AcompanantesReservaciones> AcompanantesReservaciones { get; set; }
         public virtual DbSet<Clientes> Clientes { get; set; }
         public virtual DbSet<Habitaciones> Habitaciones { get; set; }
         public virtual DbSet<Reservaciones> Reservaciones { get; set; }
@@ -32,60 +32,18 @@ namespace AccesoDatos
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Server=localhost;Database=hotel;Trusted_Connection=True");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
-
-            modelBuilder.Entity<AcompanantesReservaciones>(entity =>
-            {
-                entity.HasKey(e => e.IdInvitadosReservacion)
-                    .HasName("PK__acompana__447394593B8F48BF");
-
-                entity.ToTable("acompanantes_reservaciones", "hotel");
-
-                entity.Property(e => e.IdInvitadosReservacion)
-                    .HasColumnName("id_invitados_reservacion")
-                    .HasColumnType("numeric(18, 0)")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.EdadInvitado)
-                    .HasColumnName("edad_invitado")
-                    .HasColumnType("numeric(18, 0)");
-
-                entity.Property(e => e.IdReservacion)
-                    .HasColumnName("id_reservacion")
-                    .HasColumnType("numeric(18, 0)");
-
-                entity.Property(e => e.NombreCompletoInvitado)
-                    .IsRequired()
-                    .HasColumnName("nombre_completo_invitado")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.TipoInvitado)
-                    .IsRequired()
-                    .HasColumnName("tipo_invitado")
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdReservacionNavigation)
-                    .WithMany(p => p.AcompanantesReservaciones)
-                    .HasForeignKey(d => d.IdReservacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_acompanantes_reservaciones_reservaciones");
-            });
-
             modelBuilder.Entity<Clientes>(entity =>
             {
                 entity.HasKey(e => e.IdCliente)
-                    .HasName("PK__clientes__677F38F52AE88F96");
+                    .HasName("PK__clientes__677F38F523B20092");
 
-                entity.ToTable("clientes", "hotel");
+                entity.ToTable("clientes");
 
                 entity.Property(e => e.IdCliente)
                     .HasColumnName("id_cliente")
@@ -145,27 +103,17 @@ namespace AccesoDatos
                     .HasColumnName("telefono_contacto")
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Usuario)
-                    .HasColumnName("usuario")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.UsuarioNavigation)
-                    .WithMany(p => p.Clientes)
-                    .HasForeignKey(d => d.Usuario)
-                    .HasConstraintName("FK_clientes_usuarios");
             });
 
             modelBuilder.Entity<Habitaciones>(entity =>
             {
-                entity.HasKey(e => e.NumHabitacion)
-                    .HasName("PK__habitaco__CA9FE567FB34308D");
+                entity.HasKey(e => e.IdHabitacion)
+                    .HasName("PK__habitaci__773F28F34F6B31C0");
 
-                entity.ToTable("habitaciones", "hotel");
+                entity.ToTable("habitaciones");
 
-                entity.Property(e => e.NumHabitacion)
-                    .HasColumnName("num_habitacion")
+                entity.Property(e => e.IdHabitacion)
+                    .HasColumnName("id_habitacion")
                     .HasColumnType("numeric(18, 0)");
 
                 entity.Property(e => e.CapacidadPersonas)
@@ -174,27 +122,31 @@ namespace AccesoDatos
 
                 entity.Property(e => e.HabitacionActiva).HasColumnName("habitacion_activa");
 
+                entity.Property(e => e.IdTipoHabitacion)
+                    .HasColumnName("id_tipo_habitacion")
+                    .HasColumnType("numeric(18, 0)");
+
+                entity.Property(e => e.NumHabitacion)
+                    .HasColumnName("num_habitacion")
+                    .HasColumnType("numeric(18, 0)");
+
                 entity.Property(e => e.PisoHabitacion)
                     .HasColumnName("piso_habitacion")
                     .HasColumnType("numeric(18, 0)");
 
-                entity.Property(e => e.TipoHabitacion)
-                    .HasColumnName("tipo_habitacion")
-                    .HasColumnType("numeric(18, 0)");
-
-                entity.HasOne(d => d.TipoHabitacionNavigation)
+                entity.HasOne(d => d.IdTipoHabitacionNavigation)
                     .WithMany(p => p.Habitaciones)
-                    .HasForeignKey(d => d.TipoHabitacion)
+                    .HasForeignKey(d => d.IdTipoHabitacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_habitacones_tipos_habitaciones");
+                    .HasConstraintName("fk_habitaciones_tipos_habitaciones");
             });
 
             modelBuilder.Entity<Reservaciones>(entity =>
             {
                 entity.HasKey(e => e.IdReservacion)
-                    .HasName("PK__reservac__786D5E835F9B4A4A");
+                    .HasName("PK__reservac__786D5E83ECF3838B");
 
-                entity.ToTable("reservaciones", "hotel");
+                entity.ToTable("reservaciones");
 
                 entity.Property(e => e.IdReservacion)
                     .HasColumnName("id_reservacion")
@@ -203,10 +155,6 @@ namespace AccesoDatos
 
                 entity.Property(e => e.CantidadAcompanantes)
                     .HasColumnName("cantidad_acompanantes")
-                    .HasColumnType("numeric(18, 0)");
-
-                entity.Property(e => e.Cliente)
-                    .HasColumnName("cliente")
                     .HasColumnType("numeric(18, 0)");
 
                 entity.Property(e => e.CostoReservacion)
@@ -229,28 +177,32 @@ namespace AccesoDatos
                     .HasColumnName("fecha_salida")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.NumHabitacion)
-                    .HasColumnName("num_habitacion")
+                entity.Property(e => e.IdCliente)
+                    .HasColumnName("id_cliente")
                     .HasColumnType("numeric(18, 0)");
 
-                entity.HasOne(d => d.ClienteNavigation)
-                    .WithMany(p => p.Reservaciones)
-                    .HasForeignKey(d => d.Cliente)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_reservaciones_clientes");
+                entity.Property(e => e.IdHabitacion)
+                    .HasColumnName("id_habitacion")
+                    .HasColumnType("numeric(18, 0)");
 
-                entity.HasOne(d => d.NumHabitacionNavigation)
+                entity.HasOne(d => d.IdClienteNavigation)
                     .WithMany(p => p.Reservaciones)
-                    .HasForeignKey(d => d.NumHabitacion)
-                    .HasConstraintName("FK_reservaciones_habitacones");
+                    .HasForeignKey(d => d.IdCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_reservaciones_clientes");
+
+                entity.HasOne(d => d.IdHabitacionNavigation)
+                    .WithMany(p => p.Reservaciones)
+                    .HasForeignKey(d => d.IdHabitacion)
+                    .HasConstraintName("fk_reservaciones_habitaciones");
             });
 
             modelBuilder.Entity<Roles>(entity =>
             {
                 entity.HasKey(e => e.IdRol)
-                    .HasName("PK__roles__6ABCB5E00F5BA411");
+                    .HasName("PK__roles__6ABCB5E028C9DA41");
 
-                entity.ToTable("roles", "hotel");
+                entity.ToTable("roles");
 
                 entity.Property(e => e.IdRol)
                     .HasColumnName("id_rol")
@@ -268,15 +220,15 @@ namespace AccesoDatos
 
             modelBuilder.Entity<RolesUsuarios>(entity =>
             {
-                entity.ToTable("roles_usuarios", "hotel");
+                entity.ToTable("roles_usuarios");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasColumnType("numeric(18, 0)")
                     .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Rol)
-                    .HasColumnName("rol")
+                entity.Property(e => e.IdRol)
+                    .HasColumnName("id_rol")
                     .HasColumnType("numeric(18, 0)");
 
                 entity.Property(e => e.Usuario)
@@ -285,25 +237,25 @@ namespace AccesoDatos
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.RolNavigation)
+                entity.HasOne(d => d.IdRolNavigation)
                     .WithMany(p => p.RolesUsuarios)
-                    .HasForeignKey(d => d.Rol)
+                    .HasForeignKey(d => d.IdRol)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_roles_usuarios_roles");
+                    .HasConstraintName("fk_roles_usuarios_roles");
 
                 entity.HasOne(d => d.UsuarioNavigation)
                     .WithMany(p => p.RolesUsuarios)
                     .HasForeignKey(d => d.Usuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_roles_usuarios_usuarios");
+                    .HasConstraintName("fk_roles_usuarios_usuarios");
             });
 
             modelBuilder.Entity<TiposHabitaciones>(entity =>
             {
                 entity.HasKey(e => e.IdTipoHabitacion)
-                    .HasName("PK__tipos_ha__41F1419E252AC87D");
+                    .HasName("PK__tipos_ha__6A65108C8299B2B2");
 
-                entity.ToTable("tipos_habitaciones", "hotel");
+                entity.ToTable("tipos_habitaciones");
 
                 entity.Property(e => e.IdTipoHabitacion)
                     .HasColumnName("id_tipo_habitacion")
@@ -324,15 +276,14 @@ namespace AccesoDatos
             modelBuilder.Entity<Usuarios>(entity =>
             {
                 entity.HasKey(e => e.Usuario)
-                    .HasName("PK__usuarios__9AFF8FC769E8142C");
+                    .HasName("PK__usuarios__9AFF8FC7B05DDE03");
 
-                entity.ToTable("usuarios", "hotel");
+                entity.ToTable("usuarios");
 
                 entity.Property(e => e.Usuario)
                     .HasColumnName("usuario")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Contrasena)
                     .IsRequired()
@@ -342,6 +293,10 @@ namespace AccesoDatos
 
                 entity.Property(e => e.UsuarioActivo).HasColumnName("usuario_activo");
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

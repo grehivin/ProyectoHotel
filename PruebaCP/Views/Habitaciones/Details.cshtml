@@ -1,0 +1,48 @@
+﻿@model Entidades.Habitaciones
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Habitaciones</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumHabitacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumHabitacion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PisoHabitacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PisoHabitacion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CapacidadPersonas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CapacidadPersonas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HabitacionActiva)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HabitacionActiva)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdTipoHabitacionNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdTipoHabitacionNavigation.Descripcion)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdHabitacion">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

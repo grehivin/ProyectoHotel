@@ -1,43 +1,29 @@
-use progravan
+create database hotel;
 go
 
-create schema hotel;
+use hotel;
 go
 
-create table hotel.usuarios (
+create table usuarios (
 	usuario varchar(50) not null primary key,
 	contrasena varchar(50) not null,
     usuario_activo bit not null
 )
 
-create table hotel.roles (
+create table roles (
 	id_rol numeric identity(1,1) not null primary key,
 	descripcion varchar(255) not null,
 	rol_activo bit not null
 )
 
-create table hotel.roles_usuarios (
+create table roles_usuarios (
 	id numeric identity(1,1) not null primary key,
 	usuario varchar(50) not null,
-	rol numeric not null
+	id_rol numeric not null
 )
 
-create table hotel.tipos_habitaciones (
-    id_tipo_habitacion numeric identity(1,1) not null primary key,
-    descripcion varchar(255) not null,
-    precio_noche numeric not null);
-
-create table hotel.habitaciones (
-    num_habitacion numeric not null primary key,
-    piso_habitacion numeric not null,
-    tipo_habitacion numeric not null,
-    capacidad_personas numeric not null,
-    habitacion_activa bit not null
-)
-
-create table hotel.clientes (
+create table clientes (
     id_cliente numeric not null primary key,
-	usuario varchar(50),
     nombre_completo varchar(100) not null,
     correo_electronico varchar(100) not null,
     telefono_contacto varchar(50) not null,
@@ -50,10 +36,24 @@ create table hotel.clientes (
     direccion varchar(255)
 )
 
-create table hotel.reservaciones (
+create table tipos_habitaciones (
+    id_tipo_habitacion numeric identity(1,1) not null primary key,
+    descripcion varchar(255) not null,
+    precio_noche numeric not null);
+
+create table habitaciones (
+	id_habitacion numeric not null primary key,
+    num_habitacion numeric not null,
+    piso_habitacion numeric not null,
+    id_tipo_habitacion numeric not null,
+    capacidad_personas numeric not null,
+    habitacion_activa bit not null
+)
+
+create table reservaciones (
     id_reservacion numeric identity(1,1) not null primary key,
-    cliente numeric not null,
-	num_habitacion numeric,
+    id_cliente numeric not null,
+	id_habitacion numeric,
     cantidad_acompanantes numeric not null,
     fecha_entrada datetime not null,
     fecha_salida datetime not null,
@@ -62,15 +62,62 @@ create table hotel.reservaciones (
     costo_reservacion_pagado bit not null,
 )
 
-create table hotel.acompanantes_reservaciones (
-    id_invitados_reservacion numeric identity(1,1) not null primary key,
-    id_reservacion numeric not null,
-    nombre_completo_invitado varchar(100) not null,
-    edad_invitado numeric not null,
-    tipo_invitado varchar(1) not null
-)
+alter table roles_usuarios
+	with check 
+	add constraint fk_roles_usuarios_roles
+	foreign key (id_rol) 
+	references roles (id_rol)
+go
 
-insert into hotel.usuarios (
+alter table roles_usuarios
+	check constraint fk_roles_usuarios_roles
+go
+
+alter table roles_usuarios
+	with check 
+	add constraint fk_roles_usuarios_usuarios
+	foreign key (usuario) 
+	references usuarios (usuario)
+go
+
+alter table roles_usuarios
+	check constraint fk_roles_usuarios_usuarios
+go
+
+alter table habitaciones
+	with check 
+	add constraint fk_habitaciones_tipos_habitaciones
+	foreign key (id_tipo_habitacion) 
+	references tipos_habitaciones (id_tipo_habitacion)
+go
+
+alter table habitaciones
+	check constraint fk_habitaciones_tipos_habitaciones
+go
+
+alter table reservaciones
+	with check 
+	add constraint fk_reservaciones_clientes
+	foreign key (id_cliente) 
+	references clientes (id_cliente)
+go
+
+alter table reservaciones
+	check constraint fk_reservaciones_clientes
+go
+
+alter table reservaciones
+	with check 
+	add constraint fk_reservaciones_habitaciones
+	foreign key (id_habitacion) 
+	references habitaciones (id_habitacion)
+go
+
+alter table reservaciones
+	check constraint fk_reservaciones_habitaciones
+go
+
+insert into usuarios (
     usuario,
     contrasena,
     usuario_activo
@@ -81,7 +128,7 @@ values (
     1
 )
 
-insert into hotel.roles (
+insert into roles (
     descripcion,
     rol_activo
 )
@@ -90,15 +137,15 @@ values (
     1
 )
 
-insert into hotel.roles_usuarios (
+insert into roles_usuarios (
     usuario,
-    rol
+    id_rol
 ) values (
     'admin',
     1
 )
 
-insert into hotel.tipos_habitaciones (
+insert into tipos_habitaciones (
 	descripcion,
 	precio_noche
 ) values (
@@ -106,26 +153,29 @@ insert into hotel.tipos_habitaciones (
 	123.45
 )
 
-insert into hotel.habitaciones (
+insert into habitaciones (
+	id_habitacion,
 	num_habitacion,
 	piso_habitacion,
-	tipo_habitacion,
+	id_tipo_habitacion,
 	capacidad_personas,
 	habitacion_activa
 ) values (
-	001,
+	1001,
+	1,
 	1,
 	1,
 	500,
 	1
 )
-
 go
 
+// /*
 create view hotel.habitaciones_disponibles as 
 	select
 		h.*
 	from hotel.reservaciones r right outer join hotel.habitaciones h
 		on r.num_habitacion = h.num_habitacion
 	where
-		r.id_reservacion is null;
+		r.id_reservacion is null; 
+// */

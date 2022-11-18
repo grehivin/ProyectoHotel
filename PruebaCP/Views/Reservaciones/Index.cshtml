@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Entidades.Reservaciones>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CantidadAcompanantes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaEntrada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaSalida)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoReservacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostoReservacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostoReservacionPagado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdClienteNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdHabitacionNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantidadAcompanantes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaEntrada)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaSalida)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoReservacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostoReservacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostoReservacionPagado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdClienteNavigation.CodigoPostal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdHabitacionNavigation.IdHabitacion)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdReservacion">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdReservacion">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdReservacion">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

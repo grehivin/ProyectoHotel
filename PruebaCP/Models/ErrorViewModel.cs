@@ -1,6 +1,6 @@
 using System;
 
-namespace PruebaCP.Models
+namespace WebAPI.Models
 {
     public class ErrorViewModel
     {

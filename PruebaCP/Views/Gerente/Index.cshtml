@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "Gerencia";
+}
+
+<h1>Gerencia: administración del hotel</h1>
+<hr />
+<p class="text-body">Utilice estas opciones para administrar los accesos y habitaciones del hotel.</p>
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-left box-shadow mb-3">
+    <div class="navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-controller="Roles" asp-action="Index">Roles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-controller="RolesUsuarios" asp-action="Index">Asignación de roles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-controller="TiposHabitaciones" asp-action="Index">Tipos de habitaciones</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-danger" asp-controller="Habitaciones" asp-action="Index">Habitaciones</a>
+            </li>
+        </ul>
+    </div>
+</nav>

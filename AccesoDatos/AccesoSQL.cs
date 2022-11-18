@@ -205,7 +205,7 @@ namespace AccesoDatos
                 if (consulta != null)
                 {
                     consulta.NumHabitacion = P_Entidad.NumHabitacion;
-                    consulta.TipoHabitacion = P_Entidad.TipoHabitacion;
+                    consulta.IdTipoHabitacion = P_Entidad.IdTipoHabitacion;
                     consulta.CapacidadPersonas = P_Entidad.CapacidadPersonas;
                     consulta.HabitacionActiva = P_Entidad.HabitacionActiva;
                     contexto.SaveChanges();
@@ -364,8 +364,8 @@ namespace AccesoDatos
                     consulta.FechaEntrada = P_Entidad.FechaEntrada;
                     consulta.FechaSalida = P_Entidad.FechaSalida;
                     consulta.CantidadAcompanantes = P_Entidad.CantidadAcompanantes;
-                    consulta.Cliente = P_Entidad.Cliente;
-                    consulta.NumHabitacion = P_Entidad.NumHabitacion;
+                    consulta.IdCliente = P_Entidad.IdCliente;
+                    consulta.IdHabitacion = P_Entidad.IdHabitacion;
                     consulta.CostoReservacion = P_Entidad.CostoReservacion;
                     contexto.SaveChanges();
                     resultado = true;

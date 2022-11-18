@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Entidades.Usuarios>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1>Administración de usuarios</h1>
+
+<p>
+    <a asp-action="Create">Crear usuario</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <!-- 
+            <th>
+                @Html.DisplayNameFor(model => model.Contrasena)
+            </th> 
+            -->
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioActivo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <th>
+                @Html.DisplayFor(model => item.Usuario)
+            </th>
+            <!--
+            <td>
+                    @Html.DisplayFor(modelItem => item.Contrasena)
+            </td>
+            -->
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioActivo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Usuario">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Usuario">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Usuario">Borrar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
