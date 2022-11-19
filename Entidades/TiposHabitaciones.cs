@@ -15,9 +15,9 @@ namespace Entidades
             Habitaciones = new HashSet<Habitaciones>();
         }
 
-        [Display(Name = "Código del tipo de habitación")]
+        [Display(Name = "Código")]
         public decimal IdTipoHabitacion { get; set; }
-        [Display(Name = "Descripción del tipo de habitación")]
+        [Display(Name = "Descripción")]
         public string Descripcion { get; set; }
         [Display(Name = "Precio por noche")]
         public decimal PrecioNoche { get; set; }

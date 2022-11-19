@@ -7,7 +7,7 @@
 <h1>Administración de usuarios</h1>
 
 <p>
-    <a asp-action="Create">Crear usuario</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo</a>
 </p>
 <table class="table">
     <thead>
@@ -42,9 +42,11 @@
                 @Html.DisplayFor(modelItem => item.UsuarioActivo)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Usuario">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Usuario">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Usuario">Borrar</a>
+                <!--
+                <a asp-action="Details" asp-route-id="@item.Usuario" class="btn btn-info">Información</a> 
+                -->
+                <a asp-action="Edit" asp-route-id="@item.Usuario" class="btn btn-warning">Editar</a>
+                <a asp-action="Delete" asp-route-id="@item.Usuario" class="btn btn-danger">Borrar</a>
             </td>
         </tr>
 }

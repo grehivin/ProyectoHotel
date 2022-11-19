@@ -19,7 +19,7 @@ namespace Entidades
         public string Usuario { get; set; }
         [Display(Name = "Contraseña")]
         public string Contrasena { get; set; }
-        [Display(Name = "Usuario activo?")]
+        [Display(Name = "Usuario activo")]
         public bool UsuarioActivo { get; set; }
 
         public virtual ICollection<RolesUsuarios> RolesUsuarios { get; set; }
