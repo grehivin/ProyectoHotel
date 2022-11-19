@@ -22,14 +22,16 @@ namespace Entidades
         public DateTime FechaEntrada { get; set; }
         [Display(Name = "Fecha de salida")]
         public DateTime FechaSalida { get; set; }
-        [Display(Name = "Estado de la reservación")]
+        [Display(Name = "Estado")]
         public string EstadoReservacion { get; set; }
-        [Display(Name = "Costo de la reservación")]
+        [Display(Name = "Costo")]
         public decimal CostoReservacion { get; set; }
-        [Display(Name = "Reservación pagada?")]
+        [Display(Name = "Reservación pagada")]
         public bool CostoReservacionPagado { get; set; }
 
+        [Display(Name = "Cliente")]
         public virtual Clientes IdClienteNavigation { get; set; }
+        [Display(Name = "Habitación")]
         public virtual Habitaciones IdHabitacionNavigation { get; set; }
     }
 }

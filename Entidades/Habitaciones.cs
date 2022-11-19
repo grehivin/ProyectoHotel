@@ -17,17 +17,18 @@ namespace Entidades
 
         [Display(Name = "# de habitación")]
         public decimal IdHabitacion { get; set; }
-        [Display(Name = "# de la habitación en el piso")]
+        [Display(Name = "# piso")]
         public decimal NumHabitacion { get; set; }
-        [Display(Name = "# del piso de la habitación")]
+        [Display(Name = "Habitación")]
         public decimal PisoHabitacion { get; set; }
         [Display(Name = "Código del tipo de habitación")]
         public decimal IdTipoHabitacion { get; set; }
-        [Display(Name = "Capacidad en personas")]
+        [Display(Name = "Capacidad de personas")]
         public decimal CapacidadPersonas { get; set; }
-        [Display(Name = "Habitación activa?")]
+        [Display(Name = "Habitación activa")]
         public bool HabitacionActiva { get; set; }
 
+        [Display(Name = "Tipo de habitación")]
         public virtual TiposHabitaciones IdTipoHabitacionNavigation { get; set; }
         public virtual ICollection<Reservaciones> Reservaciones { get; set; }
     }

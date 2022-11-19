@@ -6,7 +6,7 @@
 
 <h1>Borrar</h1>
 
-<h3>Desea borrar este registro?</h3>
+<!-- h3>Desea borrar este registro?</h3 -->
 <div>
     <h4>Tipo de habitación</h4>
     <hr />
@@ -30,10 +30,10 @@
             @Html.DisplayFor(model => model.PrecioNoche)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="IdTipoHabitacion" />
-        <input type="submit" value="Borrar" class="btn btn-danger" /> 
+        <input type="submit" value="Borrar" class="btn btn-danger" />
         <a asp-action="Index" class="btn btn-dark">Cancelar</a>
     </form>
 </div>

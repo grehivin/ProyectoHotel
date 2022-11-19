@@ -10,14 +10,16 @@ namespace Entidades
 {
     public partial class RolesUsuarios
     {
-        [Display(Name = "Código de asociación entre el usario y el rol")]
+        // [Display(Name = "Código de asociación entre el usario y el rol")]
         public decimal Id { get; set; }
         [Display(Name = "Usuario")]
         public string Usuario { get; set; }
         [Display(Name = "Código del rol")]
         public decimal IdRol { get; set; }
 
+        [Display(Name = "Rol")]
         public virtual Roles IdRolNavigation { get; set; }
+        [Display(Name = "Usuario")]
         public virtual Usuarios UsuarioNavigation { get; set; }
     }
 }
