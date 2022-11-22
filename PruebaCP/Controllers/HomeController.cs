@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -18,12 +19,18 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "1")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Roles = "2")]
+        public IActionResult Privacy()
+
+
         public IActionResult About()
+
         {
             return View();
         }

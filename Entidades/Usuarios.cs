@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Xml;
+using System.Linq;
+
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -22,6 +25,8 @@ namespace Entidades
         [Display(Name = "Usuario activo")]
         public bool UsuarioActivo { get; set; }
 
+    
         public virtual ICollection<RolesUsuarios> RolesUsuarios { get; set; }
+
     }
 }

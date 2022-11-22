@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace WebAPI.Controllers
 {
@@ -20,6 +22,8 @@ namespace WebAPI.Controllers
         }
 
         // GET: Usuarios
+
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Usuarios.ToListAsync());
