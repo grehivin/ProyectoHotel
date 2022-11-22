@@ -1,4 +1,5 @@
 using AccesoDatos;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,15 @@ namespace WebAPI
         {
             services.AddControllersWithViews();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(option =>
+                {
+                    option.LoginPath = "/Seguridad/Index";
+                    option.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+                    option.AccessDeniedPath = "/Seguridad/AccesoDenegado";
+                }
+                );
+
             //services.AddDbContext<HotelContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HotelDB")));
         }
 
@@ -45,13 +55,15 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Seguridad}/{action=Index}/{id?}");
             });
         }
     }
