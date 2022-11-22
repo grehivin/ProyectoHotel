@@ -1,12 +1,12 @@
 ﻿@model Entidades.RolesUsuarios
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Asignación de roles";
 }
 
-<h1>Create</h1>
+<h1>Asignar</h1>
 
-<h4>RolesUsuarios</h4>
+<h4>Roles a usuario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,14 +21,14 @@
                 <select asp-for="IdRol" class ="form-control" asp-items="ViewBag.IdRol"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Asignar rol" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-dark">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

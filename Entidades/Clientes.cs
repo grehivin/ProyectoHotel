@@ -15,24 +15,24 @@ namespace Entidades
             Reservaciones = new HashSet<Reservaciones>();
         }
 
-        [Display(Name="# de identificación del cliente")]
+        [Display(Name="# de identificación")]
         public decimal IdCliente { get; set; }
         [Display(Name = "Nombre completo")]
         public string NombreCompleto { get; set; }
         [Display(Name = "Correo electrónico")]
         public string CorreoElectronico { get; set; }
-        [Display(Name = "Teléfono de contacto")]
+        [Display(Name = "Teléfono")]
         public string TelefonoContacto { get; set; }
-        [Display(Name = "Cliente activo?")]
+        [Display(Name = "Cliente activo")]
         public bool ClienteActivo { get; set; }
         [Display(Name = "País de residencia")]
         public string Pais { get; set; }
-        [Display(Name = "Estado/Provincia/Departamento")]
-        public string Estado { get; set; }
-        [Display(Name = "Condado/Cantón/Municipalidad")]
-        public string Municipalidad { get; set; }
-        [Display(Name = "Barrio")]
-        public string Localidad { get; set; }
+        [Display(Name = "Provincia")]
+        public string Provincia { get; set; }
+        [Display(Name = "Cantón")]
+        public string Canton { get; set; }
+        [Display(Name = "Distrito")]
+        public string Distrito { get; set; }
         [Display(Name = "Código postal")]
         public string CodigoPostal { get; set; }
         [Display(Name = "Dirección exacta")]

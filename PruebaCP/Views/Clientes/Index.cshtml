@@ -1,17 +1,23 @@
 ﻿@model IEnumerable<Entidades.Clientes>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clientes";
 }
 
-<h1>Index</h1>
+<h1>Clientes</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo cliente</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ClienteActivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCliente)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.NombreCompleto)
             </th>
@@ -21,20 +27,18 @@
             <th>
                 @Html.DisplayNameFor(model => model.TelefonoContacto)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClienteActivo)
-            </th>
+            <!--
             <th>
                 @Html.DisplayNameFor(model => model.Pais)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Estado)
+                @Html.DisplayNameFor(model => model.Provincia)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Municipalidad)
+                @Html.DisplayNameFor(model => model.Canton)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Localidad)
+                @Html.DisplayNameFor(model => model.Distrito)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CodigoPostal)
@@ -42,12 +46,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.Direccion)
             </th>
+            -->
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClienteActivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCliente)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NombreCompleto)
             </td>
@@ -57,20 +68,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TelefonoContacto)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClienteActivo)
-            </td>
+            <!--
             <td>
                 @Html.DisplayFor(modelItem => item.Pais)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Estado)
+                @Html.DisplayFor(modelItem => item.Provincia)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Municipalidad)
+                @Html.DisplayFor(modelItem => item.Canton)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Localidad)
+                @Html.DisplayFor(modelItem => item.Distrito)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CodigoPostal)
@@ -78,11 +87,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Direccion)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCliente">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCliente">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCliente">Delete</a>
-            </td>
+            -->
+        <td>
+            <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-info">Información</a> 
+            <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-warning">Editar</a> 
+            <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-danger">Borrar</a>
+        </td>
         </tr>
 }
     </tbody>

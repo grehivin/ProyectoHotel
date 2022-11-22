@@ -24,8 +24,13 @@ namespace WebAPI.Controllers
         {
             return View();
         }
+
         [Authorize(Roles = "2")]
         public IActionResult Privacy()
+
+
+        public IActionResult About()
+
         {
             return View();
         }

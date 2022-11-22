@@ -19,7 +19,7 @@ namespace Entidades
         public decimal IdRol { get; set; }
         [Display(Name = "Descripción del rol")]
         public string Descripcion { get; set; }
-        [Display(Name = "Rol activo?")]
+        [Display(Name = "Rol activo")]
         public bool RolActivo { get; set; }
 
         public virtual ICollection<RolesUsuarios> RolesUsuarios { get; set; }
