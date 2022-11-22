@@ -20,7 +20,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
 
-                        @if (User.IsInRole("1") || User.IsInRole("2"))
+                        @if (User.IsInRole("1") || User.IsInRole("3"))
                         {
 
                             <li class="nav-item">
@@ -43,7 +43,7 @@
 
                         }
 
-                        @if (User.IsInRole("2"))
+                        @if (User.IsInRole("2") || User.IsInRole("1")))
                         {
 
                             <li class="nav-item">
