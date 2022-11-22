@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
         // GET: Reservaciones/Create
         public IActionResult Create()
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "CodigoPostal");
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto");
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion");
             return View();
         }
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "CodigoPostal", reservaciones.IdCliente);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
             return View(reservaciones);
         }
@@ -85,7 +85,7 @@ namespace WebAPI.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "CodigoPostal", reservaciones.IdCliente);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
             return View(reservaciones);
         }
@@ -122,7 +122,7 @@ namespace WebAPI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "CodigoPostal", reservaciones.IdCliente);
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
             return View(reservaciones);
         }

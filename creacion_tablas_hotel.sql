@@ -29,9 +29,9 @@ create table clientes (
     telefono_contacto varchar(50) not null,
     cliente_activo bit not null,
     pais varchar(100) not null,
-    estado varchar(100) not null,
-    municipalidad varchar(100) not null,
-    localidad varchar(100) not null,
+    provincia varchar(100),
+    canton varchar(100),
+    distrito varchar(100),
     codigo_postal varchar(10) not null,
     direccion varchar(255)
 )
@@ -123,8 +123,8 @@ insert into usuarios (
     usuario_activo
 )
 values (
-    'admin',
-    'admin',
+    'gerente',
+    '1234',
     1
 )
 
@@ -133,7 +133,7 @@ insert into roles (
     rol_activo
 )
 values (
-    'Gerente',
+    'admin',
     1
 )
 
@@ -141,7 +141,7 @@ insert into roles_usuarios (
     usuario,
     id_rol
 ) values (
-    'admin',
+    'gerente',
     1
 )
 
@@ -149,8 +149,8 @@ insert into tipos_habitaciones (
 	descripcion,
 	precio_noche
 ) values (
-	'Prueba',
-	123.45
+	'staff',
+	0
 )
 
 insert into habitaciones (
@@ -170,7 +170,7 @@ insert into habitaciones (
 )
 go
 
-// /*
+/*
 create view hotel.habitaciones_disponibles as 
 	select
 		h.*
@@ -178,4 +178,4 @@ create view hotel.habitaciones_disponibles as
 		on r.num_habitacion = h.num_habitacion
 	where
 		r.id_reservacion is null; 
-// */
+-- */
