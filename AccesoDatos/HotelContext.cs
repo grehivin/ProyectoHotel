@@ -68,21 +68,18 @@ namespace AccesoDatos
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Estado)
-                    .IsRequired()
-                    .HasColumnName("estado")
+                entity.Property(e => e.Provincia)
+                    .HasColumnName("provincia")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Localidad)
-                    .IsRequired()
-                    .HasColumnName("localidad")
+                entity.Property(e => e.Distrito)
+                    .HasColumnName("distrito")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Municipalidad)
-                    .IsRequired()
-                    .HasColumnName("municipalidad")
+                entity.Property(e => e.Canton)
+                    .HasColumnName("canton")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

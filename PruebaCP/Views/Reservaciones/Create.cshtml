@@ -1,12 +1,12 @@
 ﻿@model Entidades.Reservaciones
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Reservaciones";
 }
 
-<h1>Create</h1>
+<h1>Nueva</h1>
 
-<h4>Reservaciones</h4>
+<h4>Reservación</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,31 +14,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="IdCliente" class="control-label"></label>
-                <select asp-for="IdCliente" class ="form-control" asp-items="ViewBag.IdCliente"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdHabitacion" class="control-label"></label>
-                <select asp-for="IdHabitacion" class ="form-control" asp-items="ViewBag.IdHabitacion"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CantidadAcompanantes" class="control-label"></label>
-                <input asp-for="CantidadAcompanantes" class="form-control" />
-                <span asp-validation-for="CantidadAcompanantes" class="text-danger"></span>
+                <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente"></select>
             </div>
             <div class="form-group">
                 <label asp-for="FechaEntrada" class="control-label"></label>
-                <input asp-for="FechaEntrada" class="form-control" />
+                <input asp-for="FechaEntrada" class="form-control" type="date"/>
                 <span asp-validation-for="FechaEntrada" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaSalida" class="control-label"></label>
-                <input asp-for="FechaSalida" class="form-control" />
+                <input asp-for="FechaSalida" class="form-control" type="date" />
                 <span asp-validation-for="FechaSalida" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstadoReservacion" class="control-label"></label>
-                <input asp-for="EstadoReservacion" class="form-control" />
-                <span asp-validation-for="EstadoReservacion" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CostoReservacion" class="control-label"></label>
@@ -51,14 +37,28 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="EstadoReservacion" class="control-label"></label>
+                <input asp-for="EstadoReservacion" class="form-control" />
+                <span asp-validation-for="EstadoReservacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdHabitacion" class="control-label"></label>
+                <select asp-for="IdHabitacion" class="form-control" asp-items="ViewBag.IdHabitacion"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CantidadAcompanantes" class="control-label"></label>
+                <input asp-for="CantidadAcompanantes" class="form-control" />
+                <span asp-validation-for="CantidadAcompanantes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-dark">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

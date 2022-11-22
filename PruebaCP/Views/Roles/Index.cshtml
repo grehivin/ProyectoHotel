@@ -7,7 +7,7 @@
 <h1>Adiministración de roles</h1>
 
 <p>
-    <a asp-action="Create">Crear rol</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo rol</a>
 </p>
 <table class="table">
     <thead>
@@ -37,9 +37,11 @@
                 @Html.DisplayFor(modelItem => item.RolActivo)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdRol">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.IdRol">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdRol">Borrar</a>
+                <!--
+                <a asp-action="Details" asp-route-id="@item.IdRol" class="btn btn-info">Informaciónn</a> 
+                -->
+                <a asp-action="Edit" asp-route-id="@item.IdRol" class="btn btn-warning">Editar</a> 
+                <a asp-action="Delete" asp-route-id="@item.IdRol" class="btn btn-danger">Borrar</a>
             </td>
         </tr>
 }
