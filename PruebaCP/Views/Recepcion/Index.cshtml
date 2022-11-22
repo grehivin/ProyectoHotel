@@ -1,21 +1,33 @@
 ﻿
 @{
-    ViewData["Title"] = "Atención al cliente";
+    ViewData["Title"] = "Reservaciones";
 }
 
-<h1>Atención al cliente: reservaciones</h1>
+<h1>Reservaciones</h1>
 <hr />
 <p class="text-body">Utilice estas opciones para administrar los clientes y las reservaciones.</p>
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-left box-shadow mb-3">
-    <div class="navbar-light">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link text-danger" asp-controller="Clientes" asp-action="Index">Administrar clientes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-danger" asp-controller="Reservaciones" asp-action="Index">Administrar Reservaciones</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-left box-shadow mb-3">
+    <table class="table">
+        <tr>
+            <th class="col-sm-3">Módulo</th>
+            <th class="col-sm-10">Descripción</th>
+        </tr>
+        <tr>
+            <td>
+                <a class="btn-link" asp-controller="Clientes" asp-action="Index">Administrar clientes</a>
+            </td>
+            <td>
+                Crear, modificar y eliminar clientes del hotel.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a class="btn-link" asp-controller="Reservaciones" asp-action="Index">Administrar reservaciones</a>
+            </td>
+            <td>
+                Hacer y actualizar reservaciones.
+            </td>
+        </tr>
+    </table>
+</div>

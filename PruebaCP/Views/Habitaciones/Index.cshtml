@@ -1,17 +1,21 @@
 ﻿@model IEnumerable<Entidades.Habitaciones>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Habitaciones";
 }
 
-<h1>Index</h1>
+<h1>Inventario de habitaciones</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nueva habitación</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdHabitacion)
+            </th>
+            <!--
             <th>
                 @Html.DisplayNameFor(model => model.NumHabitacion)
             </th>
@@ -21,6 +25,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CapacidadPersonas)
             </th>
+            -->
             <th>
                 @Html.DisplayNameFor(model => model.HabitacionActiva)
             </th>
@@ -34,6 +39,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.IdHabitacion)
+            </td>
+            <!--
+            <td>
                 @Html.DisplayFor(modelItem => item.NumHabitacion)
             </td>
             <td>
@@ -42,6 +51,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CapacidadPersonas)
             </td>
+            -->
             <td>
                 @Html.DisplayFor(modelItem => item.HabitacionActiva)
             </td>
@@ -49,9 +59,9 @@
                 @Html.DisplayFor(modelItem => item.IdTipoHabitacionNavigation.Descripcion)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdHabitacion">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdHabitacion">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdHabitacion">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.IdHabitacion" class="btn btn-info">Información</a>
+                <a asp-action="Edit" asp-route-id="@item.IdHabitacion" class="btn btn-warning">Editar</a>
+                <a asp-action="Delete" asp-route-id="@item.IdHabitacion" class="btn btn-danger">Borrar</a>
             </td>
         </tr>
 }
