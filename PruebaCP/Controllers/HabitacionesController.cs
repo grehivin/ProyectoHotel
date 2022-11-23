@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Negocio;
 
 namespace WebAPI.Controllers
 {
     public class HabitacionesController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IRegistroActividad _registroActividad;
 
         public HabitacionesController() // (HotelContext context)
         {
             _context = new HotelContext(); // context;
+            _registroActividad = new RegistroActividad();
         }
 
         // GET: Habitaciones
@@ -31,6 +34,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), new Habitaciones());
+
                 return NotFound();
             }
 
@@ -39,8 +44,12 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdHabitacion == id);
             if (habitaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
                 return NotFound();
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "completado"), habitaciones);
 
             return View(habitaciones);
         }
@@ -63,9 +72,15 @@ namespace WebAPI.Controllers
             {
                 _context.Add(habitaciones);
                 await _context.SaveChangesAsync();
+
+                _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "completado"), habitaciones);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdTipoHabitacion"] = new SelectList(_context.TiposHabitaciones, "IdTipoHabitacion", "Descripcion", habitaciones.IdTipoHabitacion);
+
+            _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
             return View(habitaciones);
         }
 
@@ -74,12 +89,16 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Habitaciones());
+
                 return NotFound();
             }
 
             var habitaciones = await _context.Habitaciones.FindAsync(id);
             if (habitaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
                 return NotFound();
             }
             ViewData["IdTipoHabitacion"] = new SelectList(_context.TiposHabitaciones, "IdTipoHabitacion", "Descripcion", habitaciones.IdTipoHabitacion);
@@ -95,6 +114,8 @@ namespace WebAPI.Controllers
         {
             if (id != habitaciones.IdHabitacion)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
                 return NotFound();
             }
 
@@ -109,6 +130,8 @@ namespace WebAPI.Controllers
                 {
                     if (!HabitacionesExists(habitaciones.IdHabitacion))
                     {
+                        _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
                         return NotFound();
                     }
                     else
@@ -116,9 +139,14 @@ namespace WebAPI.Controllers
                         throw;
                     }
                 }
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "completado"), habitaciones);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdTipoHabitacion"] = new SelectList(_context.TiposHabitaciones, "IdTipoHabitacion", "Descripcion", habitaciones.IdTipoHabitacion);
+
+            _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
             return View(habitaciones);
         }
 
@@ -127,6 +155,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), new Habitaciones());
+
                 return NotFound();
             }
 
@@ -135,6 +165,8 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdHabitacion == id);
             if (habitaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), habitaciones);
+
                 return NotFound();
             }
 
@@ -149,6 +181,9 @@ namespace WebAPI.Controllers
             var habitaciones = await _context.Habitaciones.FindAsync(id);
             _context.Habitaciones.Remove(habitaciones);
             await _context.SaveChangesAsync();
+
+            _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "completado"), habitaciones);
+
             return RedirectToAction(nameof(Index));
         }
 

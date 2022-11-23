@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Negocio;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Claims;
@@ -14,17 +15,17 @@ namespace WebAPI.Controllers
     public class SeguridadController : Controller
     {
         private readonly HotelContext _hotel;
-
+        private readonly IRegistroActividad _registroActividad;
         public SeguridadController ()
         {
             _hotel = new HotelContext();
+            _registroActividad = new RegistroActividad();
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
 
         public IActionResult AccesoDenegado()
         {
@@ -37,7 +38,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Autenticacion(Usuarios _usuario) 
+        public async Task<IActionResult> Autenticacion(Usuarios _usuario)
         {
             #region Autenticación con código cableado
             /*
@@ -71,13 +72,25 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(x => x.Usuario == _usuario.Usuario);
 
             if (usuario == null)
+            {
+                _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "fallido"), string.Empty);
+
                 return RedirectToAction("ErrorAcceso");
+            }
 
             if (!(usuario.Contrasena == _usuario.Contrasena))
+            {
+                _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "fallido"), usuario.RolesUsuarios.ToString());
+
                 return RedirectToAction("ErrorAcceso");
+            }
 
             if (!usuario.UsuarioActivo)
+            {
+                _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "fallido"), usuario.RolesUsuarios.ToString());
+
                 return RedirectToAction("ErrorAcceso");
+            }
 
             var claims = new List<Claim>()
             {
@@ -94,14 +107,29 @@ namespace WebAPI.Controllers
                     var rol = await _hotel.Roles
                         .FirstOrDefaultAsync(x => x.IdRol == rolUsuario.IdRol);
 
-                    if (rol != null)
-                        claims.Add(new Claim(ClaimTypes.Role, rol.Descripcion));
+                    if (rol == null)
+                    {
+                        _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "fallido"), usuario.RolesUsuarios.ToString());
+
+                        return RedirectToAction("ErrorAcceso");
+                    }
+
+                    if (!rol.RolActivo)
+                    {
+                        _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "fallido"), usuario.RolesUsuarios.ToString());
+
+                        return RedirectToAction("ErrorAcceso");
+                    }
+                    
+                    claims.Add(new Claim(ClaimTypes.Role, rol.Descripcion));
                 }
             }
 
             var claimID = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimID));
+
+            _registroActividad.AgregarRegistroAcceso(new Actividad("iniciarsesion", _usuario.Usuario, "completado"), claims[2].Value);
 
             return RedirectToAction("Index", "Home");
             // */
@@ -112,10 +140,14 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> CerrarSesion()
         {
+            string _usuario = HttpContext.User.Identity.Name;
+            string _rol = HttpContext.User.FindFirst(ClaimTypes.Role).Value;
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
+            _registroActividad.AgregarRegistroAcceso(new Actividad("cerrarsesion", _usuario, "completado"), _rol);
+
             return RedirectToAction("Index", "Seguridad");
-                 
         }
     }
 }

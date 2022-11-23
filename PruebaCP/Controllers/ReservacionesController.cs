@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Negocio;
 
 namespace WebAPI.Controllers
 {
     public class ReservacionesController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IRegistroActividad _registroActividad;
 
         public ReservacionesController() // (HotelContext context)
         {
             _context = new HotelContext(); // context;
+            _registroActividad = new RegistroActividad();
         }
 
         // GET: Reservaciones
@@ -31,6 +34,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                 return NotFound();
             }
 
@@ -40,8 +45,12 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdReservacion == id);
             if (reservaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), reservaciones);
+
                 return NotFound();
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "completado"), reservaciones);
 
             return View(reservaciones);
         }
@@ -65,10 +74,16 @@ namespace WebAPI.Controllers
             {
                 _context.Add(reservaciones);
                 await _context.SaveChangesAsync();
+
+                _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "completado"), reservaciones);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
+
+            _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "fallido"), reservaciones);
+
             return View(reservaciones);
         }
 
@@ -77,12 +92,16 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                 return NotFound();
             }
 
             var reservaciones = await _context.Reservaciones.FindAsync(id);
             if (reservaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                 return NotFound();
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
@@ -99,6 +118,8 @@ namespace WebAPI.Controllers
         {
             if (id != reservaciones.IdReservacion)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                 return NotFound();
             }
 
@@ -113,6 +134,8 @@ namespace WebAPI.Controllers
                 {
                     if (!ReservacionesExists(reservaciones.IdReservacion))
                     {
+                        _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                         return NotFound();
                     }
                     else
@@ -120,10 +143,15 @@ namespace WebAPI.Controllers
                         throw;
                     }
                 }
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "completado"), reservaciones);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
+
+            _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
             return View(reservaciones);
         }
 
@@ -132,6 +160,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Reservaciones());
+
                 return NotFound();
             }
 
@@ -141,6 +171,8 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdReservacion == id);
             if (reservaciones == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), reservaciones);
+
                 return NotFound();
             }
 
@@ -155,6 +187,9 @@ namespace WebAPI.Controllers
             var reservaciones = await _context.Reservaciones.FindAsync(id);
             _context.Reservaciones.Remove(reservaciones);
             await _context.SaveChangesAsync();
+
+            _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "completado"), reservaciones);
+
             return RedirectToAction(nameof(Index));
         }
 

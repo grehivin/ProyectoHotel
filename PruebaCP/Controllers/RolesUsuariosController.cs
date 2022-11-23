@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Negocio;
 
 namespace WebAPI.Controllers
 {
     public class RolesUsuariosController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IRegistroActividad _registroActividad;
 
         public RolesUsuariosController() // (HotelContext context)
         {
             _context = new HotelContext(); // context;
+            _registroActividad = new RegistroActividad();
         }
 
         // GET: RolesUsuarios
@@ -31,6 +34,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), new RolesUsuarios());
+
                 return NotFound();
             }
 
@@ -40,8 +45,12 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (rolesUsuarios == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
                 return NotFound();
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "completado"), rolesUsuarios);
 
             return View(rolesUsuarios);
         }
@@ -65,10 +74,16 @@ namespace WebAPI.Controllers
             {
                 _context.Add(rolesUsuarios);
                 await _context.SaveChangesAsync();
+
+                _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "completado"), rolesUsuarios);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Descripcion", rolesUsuarios.IdRol);
             ViewData["Usuario"] = new SelectList(_context.Usuarios, "Usuario", "Usuario", rolesUsuarios.Usuario);
+
+            _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
             return View(rolesUsuarios);
         }
 
@@ -77,12 +92,16 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new RolesUsuarios());
+
                 return NotFound();
             }
 
             var rolesUsuarios = await _context.RolesUsuarios.FindAsync(id);
             if (rolesUsuarios == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
                 return NotFound();
             }
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Descripcion", rolesUsuarios.IdRol);
@@ -99,6 +118,8 @@ namespace WebAPI.Controllers
         {
             if (id != rolesUsuarios.Id)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
                 return NotFound();
             }
 
@@ -113,6 +134,8 @@ namespace WebAPI.Controllers
                 {
                     if (!RolesUsuariosExists(rolesUsuarios.Id))
                     {
+                        _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
                         return NotFound();
                     }
                     else
@@ -120,10 +143,15 @@ namespace WebAPI.Controllers
                         throw;
                     }
                 }
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "completado"), rolesUsuarios);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Descripcion", rolesUsuarios.IdRol);
             ViewData["Usuario"] = new SelectList(_context.Usuarios, "Usuario", "Usuario", rolesUsuarios.Usuario);
+
+            _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
             return View(rolesUsuarios);
         }
 
@@ -132,6 +160,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), new RolesUsuarios());
+
                 return NotFound();
             }
 
@@ -141,6 +171,8 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (rolesUsuarios == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), rolesUsuarios);
+
                 return NotFound();
             }
 
@@ -155,6 +187,9 @@ namespace WebAPI.Controllers
             var rolesUsuarios = await _context.RolesUsuarios.FindAsync(id);
             _context.RolesUsuarios.Remove(rolesUsuarios);
             await _context.SaveChangesAsync();
+
+            _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "completado"), rolesUsuarios);
+
             return RedirectToAction(nameof(Index));
         }
 

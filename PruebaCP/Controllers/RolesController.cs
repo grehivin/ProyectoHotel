@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Negocio;
 
 namespace WebAPI.Controllers
 {
     public class RolesController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IRegistroActividad _registroActividad;
 
         public RolesController() // (HotelContext context)
         {
             _context = new HotelContext(); // context;
+            _registroActividad = new RegistroActividad();
         }
 
         // GET: Roles
@@ -30,6 +33,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), new Roles());
+
                 return NotFound();
             }
 
@@ -37,8 +42,12 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdRol == id);
             if (roles == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
                 return NotFound();
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "completado"), roles);
 
             return View(roles);
         }
@@ -60,8 +69,13 @@ namespace WebAPI.Controllers
             {
                 _context.Add(roles);
                 await _context.SaveChangesAsync();
+
+                _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "completado"), roles);
+
                 return RedirectToAction(nameof(Index));
             }
+            _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
             return View(roles);
         }
 
@@ -70,12 +84,16 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Roles());
+
                 return NotFound();
             }
 
             var roles = await _context.Roles.FindAsync(id);
             if (roles == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
                 return NotFound();
             }
             return View(roles);
@@ -90,6 +108,8 @@ namespace WebAPI.Controllers
         {
             if (id != roles.IdRol)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
                 return NotFound();
             }
 
@@ -104,6 +124,8 @@ namespace WebAPI.Controllers
                 {
                     if (!RolesExists(roles.IdRol))
                     {
+                        _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
                         return NotFound();
                     }
                     else
@@ -111,8 +133,12 @@ namespace WebAPI.Controllers
                         throw;
                     }
                 }
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "completado"), roles);
+
                 return RedirectToAction(nameof(Index));
             }
+            _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), roles);
+
             return View(roles);
         }
 
@@ -121,6 +147,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), new Roles());
+
                 return NotFound();
             }
 
@@ -128,6 +156,8 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdRol == id);
             if (roles == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), roles);
+                
                 return NotFound();
             }
 
@@ -142,6 +172,9 @@ namespace WebAPI.Controllers
             var roles = await _context.Roles.FindAsync(id);
             _context.Roles.Remove(roles);
             await _context.SaveChangesAsync();
+
+            _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "completado"), roles);
+
             return RedirectToAction(nameof(Index));
         }
 

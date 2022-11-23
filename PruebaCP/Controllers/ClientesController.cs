@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AccesoDatos;
 using Entidades;
+using Negocio;
 
 namespace WebAPI.Controllers
 {
     public class ClientesController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IRegistroActividad _registroActividad;
 
         public ClientesController() // (HotelContext context)
         {
             _context = new HotelContext(); // context;
+            _registroActividad = new RegistroActividad();
         }
 
         // GET: Clientes
@@ -30,6 +33,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), new Clientes());
+
                 return NotFound();
             }
 
@@ -37,8 +42,12 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdCliente == id);
             if (clientes == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
                 return NotFound();
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("ver", HttpContext.User.Claims.First().Value, "completado"), clientes);
 
             return View(clientes);
         }
@@ -56,12 +65,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCliente,NombreCompleto,CorreoElectronico,TelefonoContacto,ClienteActivo,Pais,Provincia,Canton,Distrito,CodigoPostal,Direccion")] Clientes clientes)
         {
+
             if (ModelState.IsValid)
             {
                 _context.Add(clientes);
                 await _context.SaveChangesAsync();
+
+                _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "completado"), clientes);
+
                 return RedirectToAction(nameof(Index));
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("crear", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
             return View(clientes);
         }
 
@@ -70,14 +86,19 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), new Clientes());
+
                 return NotFound();
             }
 
             var clientes = await _context.Clientes.FindAsync(id);
             if (clientes == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
                 return NotFound();
             }
+
             return View(clientes);
         }
 
@@ -90,6 +111,8 @@ namespace WebAPI.Controllers
         {
             if (id != clientes.IdCliente)
             {
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
                 return NotFound();
             }
 
@@ -104,6 +127,8 @@ namespace WebAPI.Controllers
                 {
                     if (!ClientesExists(clientes.IdCliente))
                     {
+                        _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
                         return NotFound();
                     }
                     else
@@ -111,8 +136,13 @@ namespace WebAPI.Controllers
                         throw;
                     }
                 }
+                _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "completado"), clientes);
+
                 return RedirectToAction(nameof(Index));
             }
+
+            _registroActividad.AgregarRegistro(new Actividad("editar", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
             return View(clientes);
         }
 
@@ -121,6 +151,8 @@ namespace WebAPI.Controllers
         {
             if (id == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), new Clientes());
+
                 return NotFound();
             }
 
@@ -128,6 +160,8 @@ namespace WebAPI.Controllers
                 .FirstOrDefaultAsync(m => m.IdCliente == id);
             if (clientes == null)
             {
+                _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "fallido"), clientes);
+
                 return NotFound();
             }
 
@@ -142,6 +176,9 @@ namespace WebAPI.Controllers
             var clientes = await _context.Clientes.FindAsync(id);
             _context.Clientes.Remove(clientes);
             await _context.SaveChangesAsync();
+
+            _registroActividad.AgregarRegistro(new Actividad("borrar", HttpContext.User.Claims.First().Value, "completado"), clientes);
+
             return RedirectToAction(nameof(Index));
         }
 

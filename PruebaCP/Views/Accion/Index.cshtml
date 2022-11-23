@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Entidades.Accion>
+@{
+    ViewData["Title"] = "Registro de actividad";
+}
+
+<h1>Registro de actividades</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccionRealizada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Objeto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Instancia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Resultado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Momento)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccionRealizada)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Objeto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Instancia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resultado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Momento)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

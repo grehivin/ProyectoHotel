@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Negocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace WebAPI
             services.AddControllersWithViews();
 
             services.AddTransient(typeof(IAccesoMongo), typeof(AccesoMongo));
+            services.AddTransient(typeof(IRegistroActividad), typeof(RegistroActividad));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(option =>
