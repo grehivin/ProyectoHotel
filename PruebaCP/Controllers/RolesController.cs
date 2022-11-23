@@ -56,10 +56,31 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdRol,Descripcion,RolActivo")] Roles roles)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (ModelState.IsValid)
             {
                 _context.Add(roles);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearRol",
+                    Objeto = nameof(roles),
+                    Instancia = roles.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearRol",
+                    Objeto = nameof(roles),
+                    Instancia = roles.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Fallido",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
             return View(roles);
@@ -88,8 +109,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdRol,Descripcion,RolActivo")] Roles roles)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != roles.IdRol)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarRol",
+                    Objeto = nameof(roles),
+                    Instancia = roles.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Rol no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -99,11 +131,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(roles);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarRol",
+                        Objeto = nameof(roles),
+                        Instancia = roles.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!RolesExists(roles.IdRol))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarRole",
+                            Objeto = nameof(roles),
+                            Instancia = roles.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallido",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -139,9 +191,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var roles = await _context.Roles.FindAsync(id);
             _context.Roles.Remove(roles);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarRol",
+                Objeto = nameof(roles),
+                Instancia = roles.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 

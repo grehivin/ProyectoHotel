@@ -61,12 +61,33 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdReservacion,IdCliente,IdHabitacion,CantidadAcompanantes,FechaEntrada,FechaSalida,EstadoReservacion,CostoReservacion,CostoReservacionPagado")] Reservaciones reservaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (ModelState.IsValid)
             {
                 _context.Add(reservaciones);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearReservacion",
+                    Objeto = nameof(reservaciones),
+                    Instancia = reservaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearReservacion",
+                Objeto = nameof(reservaciones),
+                Instancia = reservaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido Crear Reservacion",
+                Momento = DateTime.Now
+
+            });
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "NombreCompleto", reservaciones.IdCliente);
             ViewData["IdHabitacion"] = new SelectList(_context.Habitaciones, "IdHabitacion", "IdHabitacion", reservaciones.IdHabitacion);
             return View(reservaciones);
@@ -97,8 +118,18 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdReservacion,IdCliente,IdHabitacion,CantidadAcompanantes,FechaEntrada,FechaSalida,EstadoReservacion,CostoReservacion,CostoReservacionPagado")] Reservaciones reservaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != reservaciones.IdReservacion)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarReservacion",
+                    Objeto = nameof(reservaciones),
+                    Instancia = reservaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Reservacion no encontrado",
+                    Momento = DateTime.Now
+                });
                 return NotFound();
             }
 
@@ -108,11 +139,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(reservaciones);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarReservacion",
+                        Objeto = nameof(reservaciones),
+                        Instancia = reservaciones.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ReservacionesExists(reservaciones.IdReservacion))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarCliente",
+                            Objeto = nameof(reservaciones),
+                            Instancia = reservaciones.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallido",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -152,9 +203,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var reservaciones = await _context.Reservaciones.FindAsync(id);
             _context.Reservaciones.Remove(reservaciones);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarReservacion",
+                Objeto = nameof(reservaciones),
+                Instancia = reservaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 

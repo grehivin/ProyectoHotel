@@ -58,12 +58,34 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Usuario,Contrasena,UsuarioActivo")] Usuarios usuarios)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
+
             if (ModelState.IsValid)
             {
                 _context.Add(usuarios);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearUsuario",
+                    Objeto = nameof(usuarios),
+                    Instancia = usuarios.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearUsuario",
+                Objeto = nameof(usuarios),
+                Instancia = usuarios.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido",
+                Momento = DateTime.Now
+
+            });
             return View(usuarios);
         }
 
@@ -90,8 +112,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Usuario,Contrasena,UsuarioActivo")] Usuarios usuarios)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != usuarios.Usuario)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarUsuario",
+                    Objeto = nameof(usuarios),
+                    Instancia = usuarios.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Usuario no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -101,6 +134,16 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(usuarios);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarUsuario",
+                        Objeto = nameof(usuarios),
+                        Instancia = usuarios.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -141,9 +184,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var usuarios = await _context.Usuarios.FindAsync(id);
             _context.Usuarios.Remove(usuarios);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarUsuario",
+                Objeto = nameof(usuarios),
+                Instancia = usuarios.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 

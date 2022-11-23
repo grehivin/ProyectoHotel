@@ -61,14 +61,35 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Usuario,IdRol")] RolesUsuarios rolesUsuarios)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (ModelState.IsValid)
             {
                 _context.Add(rolesUsuarios);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearRolesUsuarios",
+                    Objeto = nameof(rolesUsuarios),
+                    Instancia = rolesUsuarios.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdRol"] = new SelectList(_context.Roles, "IdRol", "Descripcion", rolesUsuarios.IdRol);
             ViewData["Usuario"] = new SelectList(_context.Usuarios, "Usuario", "Usuario", rolesUsuarios.Usuario);
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearRolesUsuarios",
+                Objeto = nameof(rolesUsuarios),
+                Instancia = rolesUsuarios.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido",
+                Momento = DateTime.Now
+
+            });
             return View(rolesUsuarios);
         }
 
@@ -97,8 +118,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("Id,Usuario,IdRol")] RolesUsuarios rolesUsuarios)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != rolesUsuarios.Id)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarRolesUsuarios",
+                    Objeto = nameof(rolesUsuarios),
+                    Instancia = rolesUsuarios.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Rol de Usuario no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -108,11 +140,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(rolesUsuarios);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarRolesUsuarios",
+                        Objeto = nameof(rolesUsuarios),
+                        Instancia = rolesUsuarios.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!RolesUsuariosExists(rolesUsuarios.Id))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarRolesUsuarios",
+                            Objeto = nameof(rolesUsuarios),
+                            Instancia = rolesUsuarios.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallido",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -152,9 +204,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var rolesUsuarios = await _context.RolesUsuarios.FindAsync(id);
             _context.RolesUsuarios.Remove(rolesUsuarios);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarRolesUsuario",
+                Objeto = nameof(rolesUsuarios),
+                Instancia = rolesUsuarios.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido EliminarRolesUsuario",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 

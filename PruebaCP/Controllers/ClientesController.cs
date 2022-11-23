@@ -60,47 +60,50 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCliente,NombreCompleto,CorreoElectronico,TelefonoContacto,ClienteActivo,Pais,Provincia,Canton,Distrito,CodigoPostal,Direccion")] Clientes clientes, Accion accion)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
 
             if (ModelState.IsValid)
             {
-                bool status = false;
-                string accion_s = "CrearCliente";
-                try
+                _context.Add(clientes);
+                await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
                 {
-                    _context.Add(clientes);
-                    await _context.SaveChangesAsync();
-                    status = true;
-                    AccionesLogs(accion_s, accion, clientes, status);
-                    return RedirectToAction(nameof(Index));
+                    AccionRealizada = "CrearCliente",
+                    Objeto = nameof(clientes),
+                    Instancia = clientes.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
 
-                }
-                catch (Exception)
-                {
-                    AccionesLogs(accion_s, accion, clientes, status);
-                }
-                finally
-                {
-                    AccionesLogs(accion_s, accion, clientes, status);
+                });
+                return RedirectToAction(nameof(Index));
+ 
 
-                }                           
+                         
                 
             }
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearCliente",
+                Objeto = nameof(clientes),
+                Instancia = clientes.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido",
+                Momento = DateTime.Now
+
+            });
             return View(clientes);
         }
 
         // GET: Clientes/Edit/5
-        public async Task<IActionResult> Edit(decimal? id, Accion accion)
+        public async Task<IActionResult> Edit(decimal? id)
         {
-            bool status = false;
-            string accion_s = "EditarCliente";
             if (id == null)
             {
-                AccionesLogs(accion_s, accion, null, status);
                 return NotFound();
             }
 
             var clientes = await _context.Clientes.FindAsync(id);
-            AccionesLogs(accion_s,accion, clientes, status);
             if (clientes == null)
             {
                 return NotFound();
@@ -115,8 +118,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdCliente,NombreCompleto,CorreoElectronico,TelefonoContacto,ClienteActivo,Pais,Provincia,Canton,Distrito,CodigoPostal,Direccion")] Clientes clientes)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != clientes.IdCliente)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarCliente",
+                    Objeto = nameof(clientes),
+                    Instancia = clientes.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Cliente no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -126,11 +140,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(clientes);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarCliente",
+                        Objeto = nameof(clientes),
+                        Instancia = clientes.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ClientesExists(clientes.IdCliente))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarCliente",
+                            Objeto = nameof(clientes),
+                            Instancia = clientes.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallido",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -144,19 +178,15 @@ namespace WebAPI.Controllers
         }
 
         // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(decimal? id, Accion accion)
+        public async Task<IActionResult> Delete(decimal? id)
         {
-            bool status = false;
-            string accion_s = "EliminarCliente";
             if (id == null)
             {
-                AccionesLogs(accion_s, accion, null, status);
                 return NotFound();
             }
 
             var clientes = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.IdCliente == id);
-    
             if (clientes == null)
             {
                 return NotFound();
@@ -168,30 +198,23 @@ namespace WebAPI.Controllers
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id, Accion accion)
+        public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
-            bool status = false;
-            string accion_s = "EliminarCliente";
-            try
+            IAccesoMongo bitacora = new AccesoMongo();
+            var clientes = await _context.Clientes.FindAsync(id);
+            _context.Clientes.Remove(clientes);
+            await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
             {
-                var clientes = await _context.Clientes.FindAsync(id);
-                _context.Clientes.Remove(clientes);
-                await _context.SaveChangesAsync();
-                status = true;
-                AccionesLogs(accion_s, accion, clientes, status);
-                return RedirectToAction(nameof(Index));
+                AccionRealizada = "EliminarCliente",
+                Objeto = nameof(clientes),
+                Instancia = clientes.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
 
-            }
-            catch (Exception)
-            {
-                AccionesLogs(accion_s, accion, null, status);
-                return RedirectToAction(nameof(Index));
-
-            }
-            finally
-            {
-                AccionesLogs(accion_s, accion, null, status);
-            }
+            });
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ClientesExists(decimal id)
@@ -199,17 +222,6 @@ namespace WebAPI.Controllers
             return _context.Clientes.Any(e => e.IdCliente == id);
         }
 
-        public void AccionesLogs(string accion, Accion P_accion, object obj,bool status)
-        {
 
-            P_accion.AccionRealizada = accion;
-            P_accion.Objeto = obj.GetType().ToString();
-            P_accion.Instancia = "";
-            P_accion.Usuario = Environment.UserName;
-            P_accion.Resultado = status.ToString();
-            P_accion.Momento = DateTime.Now;
-            accesoMongo.AgregarRegistroBitacora(P_accion);
-
-        }
     }
 }
