@@ -22,8 +22,6 @@ namespace WebAPI.Controllers
         }
 
         // GET: Usuarios
-
-        [Authorize(Roles = "3")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Usuarios.ToListAsync());

@@ -19,23 +19,17 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = "1")]
         public IActionResult Index()
         {
             return View();
         }
-        
 
-
-        [Authorize(Roles = "2")]
         public IActionResult Privacy()
         {
         return View();
         }
 
-
         public IActionResult About()
-
         {
             return View();
         }

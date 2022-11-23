@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Perfil.cs" />
+    <Compile Remove="Models\Usuarios.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Controllers\RolesUsuariosController.cs" />
   </ItemGroup>
 

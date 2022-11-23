@@ -135,6 +135,9 @@ insert into roles (
 values (
     'admin',
     1
+),
+(	'recepcion',
+	1
 )
 
 insert into roles_usuarios (

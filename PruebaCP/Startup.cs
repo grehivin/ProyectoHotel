@@ -28,6 +28,8 @@ namespace WebAPI
         {
             services.AddControllersWithViews();
 
+            services.AddTransient(typeof(IAccesoMongo), typeof(AccesoMongo));
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(option =>
                 {
@@ -64,6 +66,9 @@ namespace WebAPI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Seguridad}/{action=Index}/{id?}");
+                /* endpoints.MapControllerRoute(
+                    name: "Home",
+                    pattern: "{controller=Home}/{action=Index}"); // */
             });
         }
     }
