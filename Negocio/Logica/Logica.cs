@@ -2,6 +2,7 @@
 using Entidades;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Negocio.Logica
@@ -13,12 +14,17 @@ namespace Negocio.Logica
         public Logica(AccesoSQL iaccesoSQL)
         {
             _iaccesoSQL = iaccesoSQL;
+
         }
+        #region Acciones
+
+        #endregion
 
 
         #region Clientes
         public bool AgregarClientes(Clientes P_Entidad)
         {
+
             return _iaccesoSQL.AgregarClientes(P_Entidad);
         }
 

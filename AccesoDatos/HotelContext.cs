@@ -32,7 +32,7 @@ namespace AccesoDatos
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=hotel;Trusted_Connection=True");
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=hotel;Trusted_Connection=True");
             }
         }
 
