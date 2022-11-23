@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -39,6 +41,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Autenticacion(Usuarios _usuario) 
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             #region Autenticación con código cableado
             /*
             _usuario.Estado = true;
@@ -102,7 +105,16 @@ namespace WebAPI.Controllers
             var claimID = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimID));
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "AbrirSesion",
+                Objeto = "WebApplicationSession",
+                Instancia = this.Url.ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "SessionAbierta",
+                Momento = DateTime.Now
 
+            });
             return RedirectToAction("Index", "Home");
             // */
             #endregion
@@ -112,7 +124,18 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> CerrarSesion()
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CerrarSesion",
+                Objeto = "WebApplicationSession",
+                Instancia = this.Url.ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "SessionCerrada",
+                Momento = DateTime.Now
+
+            });
 
             return RedirectToAction("Index", "Seguridad");
                  

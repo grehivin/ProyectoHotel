@@ -59,13 +59,34 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdHabitacion,NumHabitacion,PisoHabitacion,IdTipoHabitacion,CapacidadPersonas,HabitacionActiva")] Habitaciones habitaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (ModelState.IsValid)
             {
                 _context.Add(habitaciones);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearHabitacion",
+                    Objeto = nameof(habitaciones),
+                    Instancia = habitaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdTipoHabitacion"] = new SelectList(_context.TiposHabitaciones, "IdTipoHabitacion", "Descripcion", habitaciones.IdTipoHabitacion);
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearHabitacion",
+                Objeto = nameof(habitaciones),
+                Instancia = habitaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido",
+                Momento = DateTime.Now
+
+            });
             return View(habitaciones);
         }
 
@@ -93,8 +114,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdHabitacion,NumHabitacion,PisoHabitacion,IdTipoHabitacion,CapacidadPersonas,HabitacionActiva")] Habitaciones habitaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != habitaciones.IdHabitacion)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarCliente",
+                    Objeto = nameof(habitaciones),
+                    Instancia = habitaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Habitacion no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -104,11 +136,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(habitaciones);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarHabitacion",
+                        Objeto = nameof(habitaciones),
+                        Instancia = habitaciones.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!HabitacionesExists(habitaciones.IdHabitacion))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarHabitacion",
+                            Objeto = nameof(habitaciones),
+                            Instancia = habitaciones.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallo editar habitacion",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -146,9 +198,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var habitaciones = await _context.Habitaciones.FindAsync(id);
             _context.Habitaciones.Remove(habitaciones);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarCliente",
+                Objeto = nameof(habitaciones),
+                Instancia = habitaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 

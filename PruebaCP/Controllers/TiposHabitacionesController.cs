@@ -56,12 +56,34 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdTipoHabitacion,Descripcion,PrecioNoche")] TiposHabitaciones tiposHabitaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
+
             if (ModelState.IsValid)
             {
                 _context.Add(tiposHabitaciones);
                 await _context.SaveChangesAsync();
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "CrearTipoHabitacion",
+                    Objeto = nameof(tiposHabitaciones),
+                    Instancia = tiposHabitaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "Completado",
+                    Momento = DateTime.Now
+
+                });
                 return RedirectToAction(nameof(Index));
             }
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "CrearTipoHabitacion",
+                Objeto = nameof(tiposHabitaciones),
+                Instancia = tiposHabitaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Fallido",
+                Momento = DateTime.Now
+
+            });
             return View(tiposHabitaciones);
         }
 
@@ -88,8 +110,19 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdTipoHabitacion,Descripcion,PrecioNoche")] TiposHabitaciones tiposHabitaciones)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             if (id != tiposHabitaciones.IdTipoHabitacion)
             {
+                bitacora.AgregarRegistroBitacora(new Accion()
+                {
+                    AccionRealizada = "EditarTipoHabitacion",
+                    Objeto = nameof(tiposHabitaciones),
+                    Instancia = tiposHabitaciones.GetType().ToString(),
+                    Usuario = HttpContext.User.Claims.First().Value,
+                    Resultado = "TipoHabitacion no encontrado",
+                    Momento = DateTime.Now
+
+                });
                 return NotFound();
             }
 
@@ -99,11 +132,31 @@ namespace WebAPI.Controllers
                 {
                     _context.Update(tiposHabitaciones);
                     await _context.SaveChangesAsync();
+                    bitacora.AgregarRegistroBitacora(new Accion()
+                    {
+                        AccionRealizada = "EditarTipoHabitacion",
+                        Objeto = nameof(tiposHabitaciones),
+                        Instancia = tiposHabitaciones.GetType().ToString(),
+                        Usuario = HttpContext.User.Claims.First().Value,
+                        Resultado = "Completado",
+                        Momento = DateTime.Now
+
+                    });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TiposHabitacionesExists(tiposHabitaciones.IdTipoHabitacion))
                     {
+                        bitacora.AgregarRegistroBitacora(new Accion()
+                        {
+                            AccionRealizada = "EditarTipoHabitacion",
+                            Objeto = nameof(tiposHabitaciones),
+                            Instancia = tiposHabitaciones.GetType().ToString(),
+                            Usuario = HttpContext.User.Claims.First().Value,
+                            Resultado = "Fallido",
+                            Momento = DateTime.Now
+
+                        });
                         return NotFound();
                     }
                     else
@@ -139,9 +192,20 @@ namespace WebAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
+            IAccesoMongo bitacora = new AccesoMongo();
             var tiposHabitaciones = await _context.TiposHabitaciones.FindAsync(id);
             _context.TiposHabitaciones.Remove(tiposHabitaciones);
             await _context.SaveChangesAsync();
+            bitacora.AgregarRegistroBitacora(new Accion()
+            {
+                AccionRealizada = "EliminarTipoHabitacion",
+                Objeto = nameof(tiposHabitaciones),
+                Instancia = tiposHabitaciones.GetType().ToString(),
+                Usuario = HttpContext.User.Claims.First().Value,
+                Resultado = "Completado",
+                Momento = DateTime.Now
+
+            });
             return RedirectToAction(nameof(Index));
         }
 
