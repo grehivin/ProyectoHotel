@@ -184,7 +184,6 @@ namespace WebAPI.Controllers
             }
             catch (Exception)
             {
-
                 AccionesLogs(accion_s, accion, null, status);
                 return RedirectToAction(nameof(Index));
 
@@ -192,11 +191,7 @@ namespace WebAPI.Controllers
             finally
             {
                 AccionesLogs(accion_s, accion, null, status);
-
-
             }
-
-
         }
 
         private bool ClientesExists(decimal id)
